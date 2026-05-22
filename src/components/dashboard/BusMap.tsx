@@ -2,8 +2,9 @@
 
 import "leaflet/dist/leaflet.css";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import L from "leaflet";
+
 import {
   MapContainer,
   Marker,
@@ -12,14 +13,11 @@ import {
   Popup,
 } from "react-leaflet";
 
-const busIcon = new L.Icon({
-  iconUrl: "/bus-marker.png",
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
-  popupAnchor: [0, -36],
-});
-
-function MapUpdater({ position }: { position: [number, number] }) {
+function MapUpdater({
+  position,
+}: {
+  position: [number, number];
+}) {
   const map = useMap();
 
   useEffect(() => {
@@ -34,16 +32,35 @@ function MapUpdater({ position }: { position: [number, number] }) {
   return null;
 }
 
-export default function BusMap({ bus }: any) {
-  const markerRef = useRef<L.Marker | null>(null);
+export default function BusMap({
+  bus,
+}: any) {
+  const markerRef = useRef<L.Marker | null>(
+    null
+  );
 
-  const latitude = Number(bus?.location?.latitude);
-  const longitude = Number(bus?.location?.longitude);
+  const latitude = Number(
+    bus?.location?.latitude
+  );
+
+  const longitude = Number(
+    bus?.location?.longitude
+  );
 
   const position: [number, number] =
-    Number.isFinite(latitude) && Number.isFinite(longitude)
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude)
       ? [latitude, longitude]
       : [26.700299, 92.834709];
+
+  const busIcon = useMemo(() => {
+    return new L.Icon({
+      iconUrl: "/bus-marker.png",
+      iconSize: [36, 36],
+      iconAnchor: [18, 36],
+      popupAnchor: [0, -36],
+    });
+  }, []);
 
   useEffect(() => {
     if (markerRef.current) {
@@ -61,13 +78,23 @@ export default function BusMap({ bus }: any) {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        <Marker ref={markerRef} position={position} icon={busIcon}>
+        <Marker
+          ref={markerRef}
+          position={position}
+          icon={busIcon}
+        >
           <Popup>
             <div>
-              <strong>{bus?.busId || "BUS-01"}</strong>
+              <strong>
+                {bus?.busId || "BUS-01"}
+              </strong>
+
               <br />
+
               Lat: {position[0]}
+
               <br />
+
               Lng: {position[1]}
             </div>
           </Popup>
