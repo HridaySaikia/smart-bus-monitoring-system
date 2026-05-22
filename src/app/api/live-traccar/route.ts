@@ -20,10 +20,19 @@ export async function GET() {
       }
     );
 
-    const positions = await response.json();
+    // CHECK API RESPONSE
+    if (!response.ok) {
+      throw new Error(
+        "Traccar API failed"
+      );
+    }
+
+    const positions =
+      await response.json();
 
     // CONNECT TO MONGODB
-    const client = await clientPromise;
+    const client =
+      await clientPromise;
 
     const db = client.db(dbName);
 
@@ -33,53 +42,70 @@ export async function GET() {
       .find({})
       .toArray();
 
-    const buses = positions.map((item: any) => {
-      const matchedBus = dbBuses.find(
-        (bus: any) =>
-          Number(bus.deviceId) ===
-          Number(item.deviceId)
-      );
+    const buses = positions.map(
+      (item: any) => {
+        const matchedBus =
+          dbBuses.find(
+            (bus: any) =>
+              Number(
+                bus.deviceId
+              ) ===
+              Number(
+                item.deviceId
+              )
+          );
 
-      return {
-        id: item.id,
+        return {
+          id: item.id,
 
-        deviceId: item.deviceId,
+          deviceId:
+            item.deviceId,
 
-        busId:
-          matchedBus?.busId || "",
+          busId:
+            matchedBus?.busId ||
+            "",
 
-        busName:
-          matchedBus?.busName ||
-          "Unknown Bus",
+          busName:
+            matchedBus?.busName ||
+            "Unknown Bus",
 
-        driverName:
-          matchedBus?.driverName ||
-          "Not Assigned",
+          driverName:
+            matchedBus?.driverName ||
+            "Not Assigned",
 
-        conductorName:
-          matchedBus?.conductorName ||
-          "Not Assigned",
+          conductorName:
+            matchedBus?.conductorName ||
+            "Not Assigned",
 
-        routeName:
-          matchedBus?.routeName || "",
+          routeName:
+            matchedBus?.routeName ||
+            "",
 
-        latitude: item.latitude,
+          latitude:
+            item.latitude,
 
-        longitude: item.longitude,
+          longitude:
+            item.longitude,
 
-        speed: item.speed || 0,
+          speed:
+            item.speed || 0,
 
-        status: item.attributes?.motion
-          ? "Moving"
-          : "Stopped",
+          status:
+            item.attributes
+              ?.motion
+              ? "Moving"
+              : "Stopped",
 
-        battery:
-          item.attributes?.batteryLevel ||
-          0,
+          battery:
+            item.attributes
+              ?.batteryLevel ||
+            0,
 
-        fixTime: item.fixTime,
-      };
-    });
+          fixTime:
+            item.fixTime,
+        };
+      }
+    );
 
     return NextResponse.json({
       success: true,
@@ -96,4 +122,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-}  
+}

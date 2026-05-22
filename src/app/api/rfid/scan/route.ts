@@ -15,13 +15,15 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "UID and Bus ID required",
+          message:
+            "UID and Bus ID required",
         },
         { status: 400 }
       );
     }
 
-    const client = await clientPromise;
+    const client =
+      await clientPromise;
 
     const db = client.db(dbName);
 
@@ -36,7 +38,8 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Student not found",
+          message:
+            "Student not found",
         },
         { status: 404 }
       );
@@ -47,10 +50,13 @@ export async function POST(req: Request) {
       .collection("rfid_logs")
       .findOne(
         {
-          studentId: student.studentId,
+          studentId:
+            student.studentId,
         },
         {
-          sort: { createdAt: -1 },
+          sort: {
+            createdAt: -1,
+          },
         }
       );
 
@@ -61,14 +67,23 @@ export async function POST(req: Request) {
     }
 
     // SAVE RFID LOG
-    await db.collection("rfid_logs").insertOne({
-      studentId: student.studentId,
-      studentName: student.name,
-      busId,
-      uid,
-      action,
-      createdAt: new Date(),
-    });
+    await db
+      .collection("rfid_logs")
+      .insertOne({
+        studentId:
+          student.studentId,
+
+        studentName:
+          student.name,
+
+        busId,
+
+        uid,
+
+        action,
+
+        createdAt: new Date(),
+      });
 
     // TELEGRAM MESSAGE
     const telegramMessage = `
@@ -76,43 +91,58 @@ export async function POST(req: Request) {
 
 👦 Student: ${student.name}
 
-🆔 Student ID: ${student.studentId}
+🆔 Student ID:
+${student.studentId}
 
 🚌 Bus: ${busId}
 
 📍 Status:
-${action === "IN"
-  ? "Boarded Bus"
-  : "Left Bus"}
+${
+  action === "IN"
+    ? "Boarded Bus"
+    : "Left Bus"
+}
 
 ⏰ Time:
 ${new Date().toLocaleString()}
 `;
 
-    // SEND TELEGRAM MESSAGE
-    await fetch(
-      `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        method: "POST",
+    // SAFE TELEGRAM SEND
+    try {
+      await fetch(
+        `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
 
-        body: JSON.stringify({
-          chat_id:
-            process.env.TELEGRAM_CHAT_ID,
+          body: JSON.stringify({
+            chat_id:
+              process.env
+                .TELEGRAM_CHAT_ID,
 
-          text: telegramMessage,
-        }),
-      }
-    );
+            text: telegramMessage,
+          }),
+        }
+      );
+    } catch (telegramError) {
+      console.error(
+        "Telegram Error:",
+        telegramError
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      studentName: student.name,
+
+      studentName:
+        student.name,
+
       action,
+
       message:
         action === "IN"
           ? "Student Boarded Bus"
@@ -127,7 +157,8 @@ ${new Date().toLocaleString()}
     return NextResponse.json(
       {
         success: false,
-        message: "RFID scan failed",
+        message:
+          "RFID scan failed",
       },
       { status: 500 }
     );

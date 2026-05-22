@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 
-const dbName = "smart_bus_monitoring";
-
+const dbName =
+  process.env.MONGODB_DB ||
+  "smart_bus_monitoring";
+  
 export async function GET() {
   try {
     const client = await clientPromise;

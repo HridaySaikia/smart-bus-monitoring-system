@@ -6,8 +6,7 @@ export async function GET() {
       "https://demo.traccar.org/api/positions",
       {
         headers: {
-          Authorization:
-            "Bearer RjBEAiAUdNXSVO1P-YDtd9cXy01cMoWMVrPR8aYoKc_w_BzUaQIgJUfld-XlmfQDCo_KniXW3OOBV6Cr43QOntjmQ9_LZiZ7ImkiOjczNDI0NTkxMzE1NjI0NjYxOTQsInUiOjEyMTc2NCwiZSI6IjIwMzAtMDUtMDRUMTg6MzA6MDAuMDAwKzAwOjAwIn0",
+          Authorization: `Bearer ${process.env.TOKEN}`
         },
       }
     );
