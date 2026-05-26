@@ -315,7 +315,7 @@ export default function TrackingPage() {
                       {bus.battery}%
                     </p>
 
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs  border-white/10 font-bold">
                       Updated:
                     </p>
 
@@ -401,87 +401,96 @@ export default function TrackingPage() {
 
               </button>
 
+
               {/* DETAILS */}
 
-              {expandedBus === bus.id && (
+              <div
+                className={`grid transition-all duration-500 ease-in-out ${
+                  expandedBus === bus.id
+                    ? "grid-rows-[1fr] opacity-100"
+                    : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
 
-                <div className="border-t border-white/10 px-5 pb-5 pt-4">
+                <div className="overflow-hidden">
 
-                  <div className="grid gap-3">
+                  <div className="border-t border-white/10 px-5 pb-5 pt-4">
 
-                    <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
+                    <div className="grid gap-3">
 
-                      <p className="text-sm text-slate-400">
-                        Bus ID
-                      </p>
+                      <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
 
-                      <p className="text-sm font-semibold text-white">
-                        {bus.busId}
-                      </p>
+                        <p className="text-sm text-slate-400">
+                          Bus ID
+                        </p>
 
-                    </div>
+                        <p className="text-sm font-semibold text-white">
+                          {bus.busId}
+                        </p>
 
-                    <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
+                      </div>
 
-                      <p className="text-sm text-slate-400">
-                        Driver
-                      </p>
+                      <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
 
-                      <p className="text-sm font-semibold text-white">
-                        {bus.driverName}
-                      </p>
+                        <p className="text-sm text-slate-400">
+                          Driver
+                        </p>
 
-                    </div>
+                        <p className="text-sm font-semibold text-white">
+                          {bus.driverName}
+                        </p>
 
-                    <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
+                      </div>
 
-                      <p className="text-sm text-slate-400">
-                        Route
-                      </p>
+                      <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
 
-                      <p className="text-sm font-semibold text-white">
-                        {bus.routeName}
-                      </p>
+                        <p className="text-sm text-slate-400">
+                          Route
+                        </p>
 
-                    </div>
+                        <p className="text-sm font-semibold text-white">
+                          {bus.routeName}
+                        </p>
 
-                    <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
+                      </div>
 
-                      <p className="text-sm text-slate-400">
-                        Speed
-                      </p>
+                      <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
 
-                      <p className="text-sm font-semibold text-blue-400">
-                        {bus.speed.toFixed(2)}
-                        {" "}
-                        km/h
-                      </p>
+                        <p className="text-sm text-slate-400">
+                          Speed
+                        </p>
 
-                    </div>
+                        <p className="text-sm font-semibold text-blue-400">
+                          {bus.speed.toFixed(2)} km/h
+                        </p>
 
-                    <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
+                      </div>
 
-                      <p className="text-sm text-slate-400">
-                        Battery
-                      </p>
+                      <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
 
-                      <p className="text-sm font-semibold text-yellow-400">
-                        {bus.battery}%
-                      </p>
+                        <p className="text-sm text-slate-400">
+                          Battery
+                        </p>
 
-                    </div>
+                        <p className="text-sm font-semibold text-yellow-400">
+                          {bus.battery}%
+                        </p>
 
-                    <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
+                      </div>
 
-                      <p className="text-sm text-slate-400">
-                        Updated
-                      </p>
+                      <div className="flex items-center justify-between rounded-xl bg-black/30 px-4 py-3">
 
-                      <p className="text-sm font-semibold text-white">
-                        {new Date(
-                          bus.fixTime
-                        ).toLocaleTimeString()}
-                      </p>
+                        <p className="text-sm text-slate-400">
+                          Updated
+                        </p>
+
+                        <p className="text-sm font-semibold text-white">
+                          {new Date(
+                            bus.fixTime
+                          ).toLocaleString()}
+                        </p>
+
+                      </div>
 
                     </div>
 
@@ -489,7 +498,7 @@ export default function TrackingPage() {
 
                 </div>
 
-              )}
+              </div>
 
             </div>
 

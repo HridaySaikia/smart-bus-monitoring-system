@@ -5,33 +5,48 @@ import clientPromise from "@/lib/mongodb";
 const dbName =
   process.env.MONGODB_DB ||
   "smart_bus_monitoring";
+
 const TRACCAR_URL =
   process.env.TRACCAR_URL;
+
+const TRACCAR_USERNAME =
+  process.env.TRACCAR_USERNAME;
+
+const TRACCAR_PASSWORD =
+  process.env.TRACCAR_PASSWORD;
+
 export async function GET() {
   try {
-    // FETCH TRACCAR DATA
+
+    // BASIC AUTH
+    const auth =
+      Buffer.from(
+        `${TRACCAR_USERNAME}:${TRACCAR_PASSWORD}`
+      ).toString("base64");
+
+    // FETCH POSITIONS
     const response = await fetch(
       `${TRACCAR_URL}/api/positions`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.TOKEN}`,
+          Authorization: `Basic ${auth}`,
         },
 
         cache: "no-store",
       }
     );
 
-    // CHECK RESPONSE
     if (!response.ok) {
+
       throw new Error(
-        "Traccar API failed"
+        `Traccar API failed: ${response.status}`
       );
     }
 
     const positions =
       await response.json();
 
-    // CONNECT TO DATABASE
+    // DATABASE
     const client =
       await clientPromise;
 
@@ -45,7 +60,7 @@ export async function GET() {
         .find({})
         .toArray();
 
-    // MERGE LIVE DATA + DB DATA
+    // MERGE DATA
     const buses =
       positions.map((item: any) => {
 
@@ -57,6 +72,7 @@ export async function GET() {
           );
 
         return {
+
           id: item.id,
 
           deviceId:
@@ -117,9 +133,8 @@ export async function GET() {
       error
     );
 
-    // RETURN EMPTY ARRAY
     return NextResponse.json({
-      success: true,
+      success: false,
       buses: [],
     });
   }
