@@ -10,11 +10,19 @@ export async function POST(
   request: NextRequest
 ) {
   try {
+
     const body = await request.json();
 
-    const { uid, busId } = body;
+    // CLEAN UID
+    const uid = body.uid
+      ?.trim()
+      ?.toUpperCase();
 
+    const busId = body.busId;
+
+    // VALIDATION
     if (!uid || !busId) {
+
       return NextResponse.json(
         {
           success: false,
@@ -25,9 +33,11 @@ export async function POST(
       );
     }
 
-    const client = await clientPromise;
+    const client =
+      await clientPromise;
 
-    const db = client.db(dbName);
+    const db =
+      client.db(dbName);
 
     // FIND STUDENT
     const student = await db
@@ -36,40 +46,69 @@ export async function POST(
         rfidUid: uid,
       });
 
+    // IF STUDENT NOT FOUND
     if (!student) {
+
+      // SAVE UNKNOWN CARD LOG
+      await db
+        .collection("rfid_logs")
+        .insertOne({
+          uid,
+          studentId: "UNKNOWN",
+          studentName:
+            "Unknown Card",
+          busId,
+          timestamp: new Date(),
+          status: "ACCESS_DENIED",
+        });
+
       return NextResponse.json(
         {
           success: false,
           message:
-            "Student not found",
+            "Unknown card",
         },
         { status: 404 }
       );
     }
 
     // SAVE RFID LOG
-    await db.collection("rfid_logs").insertOne({
-      uid,
-      studentId: student.studentId,
-      studentName: student.name,
-      busId,
-      timestamp: new Date(),
-      status: "ONBOARDED",
-    });
+    await db
+      .collection("rfid_logs")
+      .insertOne({
+        uid,
+        studentId:
+          student.studentId,
+        studentName:
+          student.name,
+        busId,
+        timestamp: new Date(),
+        status: "ONBOARDED",
+      });
 
     return NextResponse.json({
       success: true,
+
       message:
         "Attendance marked successfully",
+
       student: {
         studentId:
           student.studentId,
+
         name: student.name,
-        class: student.class,
+
+        class:
+          student.class,
       },
     });
+
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      "RFID ERROR:",
+      error
+    );
 
     return NextResponse.json(
       {
