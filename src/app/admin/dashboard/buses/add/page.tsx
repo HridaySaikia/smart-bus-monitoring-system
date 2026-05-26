@@ -179,7 +179,7 @@ export default function AddBusPage() {
 
         <button
           type="submit"
-          className="w-full rounded-2xl bg-blue-600 py-4 text-lg font-bold text-white transition hover:bg-blue-700"
+          className="h-14 rounded-2xl bg-blue-600 font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20"
         >
           Add Bus
         </button>

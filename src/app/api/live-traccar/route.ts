@@ -5,12 +5,13 @@ import clientPromise from "@/lib/mongodb";
 const dbName =
   process.env.MONGODB_DB ||
   "smart_bus_monitoring";
-
+const TRACCAR_URL =
+  process.env.TRACCAR_URL;
 export async function GET() {
   try {
     // FETCH TRACCAR DATA
     const response = await fetch(
-      "https://demo.traccar.org/api/positions",
+      `${TRACCAR_URL}/api/positions`,
       {
         headers: {
           Authorization: `Bearer ${process.env.TOKEN}`,
@@ -20,7 +21,7 @@ export async function GET() {
       }
     );
 
-    // CHECK API RESPONSE
+    // CHECK RESPONSE
     if (!response.ok) {
       throw new Error(
         "Traccar API failed"
@@ -30,29 +31,29 @@ export async function GET() {
     const positions =
       await response.json();
 
-    // CONNECT TO MONGODB
+    // CONNECT TO DATABASE
     const client =
       await clientPromise;
 
-    const db = client.db(dbName);
+    const db =
+      client.db(dbName);
 
-    // FETCH ALL BUSES
-    const dbBuses = await db
-      .collection("buses")
-      .find({})
-      .toArray();
+    // FETCH BUS DATA
+    const dbBuses =
+      await db
+        .collection("buses")
+        .find({})
+        .toArray();
 
-    const buses = positions.map(
-      (item: any) => {
+    // MERGE LIVE DATA + DB DATA
+    const buses =
+      positions.map((item: any) => {
+
         const matchedBus =
           dbBuses.find(
             (bus: any) =>
-              Number(
-                bus.deviceId
-              ) ===
-              Number(
-                item.deviceId
-              )
+              Number(bus.deviceId) ===
+              Number(item.deviceId)
           );
 
         return {
@@ -91,35 +92,35 @@ export async function GET() {
             item.speed || 0,
 
           status:
-            item.attributes
-              ?.motion
+            item.attributes?.motion
               ? "Moving"
               : "Stopped",
 
           battery:
-            item.attributes
-              ?.batteryLevel ||
+            item.attributes?.batteryLevel ||
             0,
 
           fixTime:
             item.fixTime,
         };
-      }
-    );
+      });
 
     return NextResponse.json({
       success: true,
       buses,
     });
-  } catch (error) {
-    console.error(error);
 
-    return NextResponse.json(
-      {
-        success: false,
-        buses: [],
-      },
-      { status: 500 }
+  } catch (error) {
+
+    console.error(
+      "TRACCAR ERROR:",
+      error
     );
+
+    // RETURN EMPTY ARRAY
+    return NextResponse.json({
+      success: true,
+      buses: [],
+    });
   }
 }

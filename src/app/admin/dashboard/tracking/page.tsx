@@ -234,12 +234,12 @@ export default function TrackingPage() {
         <div className="overflow-hidden rounded-3xl border border-white/10 lg:col-span-2">
 
           <MapContainer
-            key="bus-map"
             center={[
               26.7001975,
               92.8356762,
             ]}
             zoom={15}
+            scrollWheelZoom={true}
             style={{
               height: "80vh",
               width: "100%",
@@ -247,14 +247,14 @@ export default function TrackingPage() {
           >
 
             <TileLayer
-              attribution="OpenStreetMap"
+              attribution="&copy; OpenStreetMap contributors"
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
             {buses.map((bus) => (
 
               <DriftMarker
-                key={bus.id}
+                key={`${bus.id}-${bus.fixTime}`}
                 position={[
                   bus.latitude,
                   bus.longitude,
@@ -272,40 +272,46 @@ export default function TrackingPage() {
                     </h2>
 
                     <p>
-                      Bus ID:
-                      {" "}
+                      <strong>
+                        Bus ID:
+                      </strong>{" "}
                       {bus.busId}
                     </p>
 
                     <p>
-                      Driver:
-                      {" "}
+                      <strong>
+                        Driver:
+                      </strong>{" "}
                       {bus.driverName}
                     </p>
 
                     <p>
-                      Route:
-                      {" "}
+                      <strong>
+                        Route:
+                      </strong>{" "}
                       {bus.routeName}
                     </p>
 
                     <p>
-                      Status:
-                      {" "}
+                      <strong>
+                        Status:
+                      </strong>{" "}
                       {bus.status}
                     </p>
 
                     <p>
-                      Speed:
-                      {" "}
+                      <strong>
+                        Speed:
+                      </strong>{" "}
                       {bus.speed.toFixed(2)}
                       {" "}
                       km/h
                     </p>
 
                     <p>
-                      Battery:
-                      {" "}
+                      <strong>
+                        Battery:
+                      </strong>{" "}
                       {bus.battery}%
                     </p>
 
@@ -446,7 +452,9 @@ export default function TrackingPage() {
                       </p>
 
                       <p className="text-sm font-semibold text-blue-400">
-                        {bus.speed.toFixed(2)} km/h
+                        {bus.speed.toFixed(2)}
+                        {" "}
+                        km/h
                       </p>
 
                     </div>

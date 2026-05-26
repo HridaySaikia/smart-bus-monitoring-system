@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 import useDeviceStatus from "@/hooks/useDeviceStatus";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const deviceConfig = [
   {
@@ -86,89 +85,157 @@ export default function DeviceStatusPage() {
   const { deviceStatus, loading } = useDeviceStatus();
 
   return (
-    <div className="space-y-6">
-      <section>
-        <h2 className="text-3xl font-bold tracking-tight text-white">
-          Device Status
-        </h2>
-        <p className="mt-2 text-muted-foreground">
-          Live monitoring of hardware modules connected to the bus system.
-        </p>
-      </section>
+    <main className="min-h-screen bg-[#020817] p-6 text-white">
 
-      <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {deviceConfig.map((device) => {
-          const Icon = device.icon;
-          const value =
-            !loading && deviceStatus
-              ? deviceStatus[device.key as keyof typeof deviceStatus]
-              : "Loading...";
+      <div className="space-y-6">
 
-          return (
-            <Card
-              key={device.key}
-              className="border-border bg-card/60 shadow-[0_10px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl"
-            >
-              <CardHeader className="flex flex-row items-start justify-between space-y-0">
-                <div>
-                  <CardTitle className="text-lg text-white">
-                    {device.label}
-                  </CardTitle>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Module health and connectivity
-                  </p>
+        {/* HEADER */}
+
+        <section>
+
+          <h2 className="text-4xl font-bold tracking-tight text-white">
+            Device Status
+          </h2>
+
+          <p className="mt-2 text-slate-400">
+            Live monitoring of hardware modules connected to the bus system.
+          </p>
+
+        </section>
+
+        {/* DEVICE CARDS */}
+
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+          {deviceConfig.map((device) => {
+
+            const Icon = device.icon;
+
+            const value =
+              !loading && deviceStatus
+                ? deviceStatus[
+                    device.key as keyof typeof deviceStatus
+                  ]
+                : "Loading...";
+
+            return (
+
+              <div
+                key={device.key}
+                className="rounded-3xl border border-white/10 bg-[#071226]/80 p-6 backdrop-blur-xl transition-all hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/10"
+              >
+
+                <div className="flex items-start justify-between">
+
+                  <div>
+
+                    <h3 className="text-lg font-semibold text-white">
+                      {device.label}
+                    </h3>
+
+                    <p className="mt-1 text-sm text-slate-400">
+                      Module health & connectivity
+                    </p>
+
+                  </div>
+
+                  <div
+                    className={`rounded-2xl p-3 ${device.bg}`}
+                  >
+                    <Icon
+                      className={`h-5 w-5 ${device.color}`}
+                    />
+                  </div>
+
                 </div>
 
-                <div className={`rounded-2xl p-3 ${device.bg}`}>
-                  <Icon className={`h-5 w-5 ${device.color}`} />
-                </div>
-              </CardHeader>
+                <div className="mt-6 flex items-center gap-3">
 
-              <CardContent>
-                <div className="flex items-center gap-2">
-                  <CircleDot className={`h-4 w-4 ${getStatusTone(String(value))}`} />
-                  <p className={`text-lg font-semibold ${getStatusTone(String(value))}`}>
+                  <CircleDot
+                    className={`h-4 w-4 ${getStatusTone(
+                      String(value)
+                    )}`}
+                  />
+
+                  <p
+                    className={`text-lg font-semibold ${getStatusTone(
+                      String(value)
+                    )}`}
+                  >
                     {String(value)}
                   </p>
+
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </section>
 
-      <Card className="border-border bg-card/60 shadow-[0_10px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl">
-        <CardHeader>
-          <CardTitle className="text-white">Device Summary</CardTitle>
-        </CardHeader>
+              </div>
 
-        <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-2xl bg-background/60 p-4">
-            <p className="text-sm text-muted-foreground">Bus ID</p>
-            <p className="mt-2 text-lg font-semibold text-white">
-              {loading ? "Loading..." : deviceStatus?.busId || "BUS-01"}
-            </p>
+            );
+          })}
+
+        </section>
+
+        {/* SUMMARY */}
+
+        <div className="rounded-3xl border border-white/10 bg-[#071226]/80 p-6 backdrop-blur-xl">
+
+          <h3 className="text-2xl font-semibold text-white">
+            Device Summary
+          </h3>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+            <div className="rounded-2xl border border-white/10 bg-[#020817] p-5">
+
+              <p className="text-sm text-slate-400">
+                Bus ID
+              </p>
+
+              <p className="mt-3 text-xl font-semibold text-white">
+                {loading
+                  ? "Loading..."
+                  : deviceStatus?.busId || "BUS-01"}
+              </p>
+
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-[#020817] p-5">
+
+              <p className="text-sm text-slate-400">
+                Last Updated
+              </p>
+
+              <p className="mt-3 text-lg font-semibold text-white">
+                {loading
+                  ? "Loading..."
+                  : deviceStatus?.updatedAt
+                  ? new Date(
+                      deviceStatus.updatedAt
+                    ).toLocaleString()
+                  : "N/A"}
+              </p>
+
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-[#020817] p-5">
+
+              <p className="text-sm text-slate-400">
+                Overall Status
+              </p>
+
+              <p className="mt-3 text-xl font-semibold text-emerald-400">
+                {loading
+                  ? "Loading..."
+                  : "Monitoring"}
+              </p>
+
+            </div>
+
           </div>
 
-          <div className="rounded-2xl bg-background/60 p-4">
-            <p className="text-sm text-muted-foreground">Last Updated</p>
-            <p className="mt-2 text-lg font-semibold text-white">
-              {loading
-                ? "Loading..."
-                : deviceStatus?.updatedAt
-                ? new Date(deviceStatus.updatedAt).toLocaleString()
-                : "N/A"}
-            </p>
-          </div>
+        </div>
 
-          <div className="rounded-2xl bg-background/60 p-4">
-            <p className="text-sm text-muted-foreground">Overall Status</p>
-            <p className="mt-2 text-lg font-semibold text-emerald-400">
-              {loading ? "Loading..." : "Monitoring"}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      </div>
+
+    </main>
   );
 }

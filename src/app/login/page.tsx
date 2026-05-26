@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 
 import {
@@ -16,6 +16,7 @@ import { setStoredParentId } from "@/lib/parent-session";
 import { setStoredRole } from "@/lib/auth";
 
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -106,9 +107,17 @@ export default function LoginPage() {
 
   return (
 
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-slate-950 to-background px-4 py-10">
+    <main className="flex min-h-screen items-center justify-center bg-[#020817] px-4 py-10">
 
-      <div className="grid w-full max-w-6xl gap-8 lg:grid-cols-2">
+      <button
+      onClick={() => router.push("/")}
+      className="absolute left-6 top-6 flex items-center gap-2 rounded-xl border border-white/10 bg-[#111827] px-4 py-2 text-sm text-slate-300 transition hover:bg-[#1e293b] hover:text-white"
+    >
+      <ArrowLeft className="h-4 w-4" />
+      Back
+    </button>
+
+      <div className="grid w-full max-w-6xl gap-10 lg:grid-cols-2">
 
         {/* LEFT SIDE */}
 
@@ -118,15 +127,15 @@ export default function LoginPage() {
 
             {/* LOGO */}
 
-            <div className="mb-6 flex items-center gap-4">
+            <div className="mb-8 flex items-center gap-4">
 
-              <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-blue-500/20 bg-blue-500/10 shadow-[0_0_40px_rgba(59,130,246,0.12)]">
+              <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-white/10 bg-[#0f172a]">
 
                 <Image
                   src="/logo.png"
                   alt="Smart Bus Logo"
-                  width={52}
-                  height={52}
+                  width={50}
+                  height={50}
                   className="object-contain"
                 />
 
@@ -148,32 +157,32 @@ export default function LoginPage() {
 
             {/* HEADING */}
 
-            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight leading-tight text-white md:text-5xl">
 
               Welcome to the Smart Bus Monitoring System
 
             </h1>
 
-            <p className="mt-5 text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="mt-6 text-base leading-7 text-slate-400 md:text-lg">
 
-              A role-based platform for
-              live tracking, student safety,
-              emergency awareness, and
-              transport monitoring.
+              A professional transport monitoring
+              platform for live tracking,
+              student safety, emergency alerts,
+              and route management.
 
             </p>
 
             {/* FEATURES */}
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
 
-              <div className="rounded-2xl border border-border bg-card/60 p-5 backdrop-blur-xl">
+              <div className="rounded-2xl border border-white/10 bg-[#0f172a] p-5">
 
                 <p className="text-sm font-semibold text-white">
                   Admin Access
                 </p>
 
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                <p className="mt-2 text-sm leading-6 text-slate-400">
 
                   Monitor route activity,
                   RFID logs, alerts,
@@ -183,17 +192,17 @@ export default function LoginPage() {
 
               </div>
 
-              <div className="rounded-2xl border border-border bg-card/60 p-5 backdrop-blur-xl">
+              <div className="rounded-2xl border border-white/10 bg-[#0f172a] p-5">
 
                 <p className="text-sm font-semibold text-white">
                   Parent Access
                 </p>
 
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                <p className="mt-2 text-sm leading-6 text-slate-400">
 
                   Track the bus,
                   view child status,
-                  and check ETA quickly.
+                  and check ETA instantly.
 
                 </p>
 
@@ -209,11 +218,11 @@ export default function LoginPage() {
 
         <section className="flex items-center">
 
-          <Card className="w-full border-border bg-card/60 backdrop-blur-xl">
+          <Card className="w-full border border-white/10 bg-[#0f172a] shadow-2xl">
 
             <CardHeader>
 
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-background/60">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#111827]">
 
                 {roleConfig.icon}
 
@@ -225,7 +234,7 @@ export default function LoginPage() {
 
               </CardTitle>
 
-              <p className="text-sm leading-6 text-muted-foreground">
+              <p className="text-sm leading-6 text-slate-400">
 
                 {roleConfig.description}
 
@@ -241,48 +250,52 @@ export default function LoginPage() {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setRole("admin")
-                  }
-                  className={`rounded-xl border px-4 py-3 text-left transition ${
+                  onClick={() => setRole("admin")}
+                  className={`rounded-2xl border px-5 py-4 text-left transition-all duration-200 ${
                     role === "admin"
-                      ? "border-blue-500/30 bg-blue-500/10 text-blue-400"
-                      : "border-border bg-background/50 text-slate-300 hover:bg-background"
+                      ? "border-blue-500 bg-blue-500/15 shadow-lg shadow-blue-500/10"
+                      : "border-white/10 bg-[#111827] hover:bg-[#1e293b]"
                   }`}
                 >
 
-                  <p className="font-medium">
-                    Admin
+                  <p
+                    className={`text-sm font-semibold ${
+                      role === "admin"
+                        ? "text-blue-400"
+                        : "text-white"
+                    }`}
+                  >
+                    Login as Admin
                   </p>
 
-                  <p className="mt-1 text-xs text-muted-foreground">
-
+                  <p className="mt-1 text-xs text-slate-400">
                     Full monitoring access
-
                   </p>
 
                 </button>
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setRole("parent")
-                  }
-                  className={`rounded-xl border px-4 py-3 text-left transition ${
+                  onClick={() => setRole("parent")}
+                  className={`rounded-2xl border px-5 py-4 text-left transition-all duration-200 ${
                     role === "parent"
-                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                      : "border-border bg-background/50 text-slate-300 hover:bg-background"
+                      ? "border-emerald-500 bg-emerald-500/15 shadow-lg shadow-emerald-500/10"
+                      : "border-white/10 bg-[#111827] hover:bg-[#1e293b]"
                   }`}
                 >
 
-                  <p className="font-medium">
-                    Parent
+                  <p
+                    className={`text-sm font-semibold ${
+                      role === "parent"
+                        ? "text-emerald-400"
+                        : "text-white"
+                    }`}
+                  >
+                    Login as Parent
                   </p>
 
-                  <p className="mt-1 text-xs text-muted-foreground">
-
+                  <p className="mt-1 text-xs text-slate-400">
                     Simple tracking access
-
                   </p>
 
                 </button>
@@ -305,7 +318,7 @@ export default function LoginPage() {
                       ? "admin@school.com"
                       : "parent@example.com"
                   }
-                  className="bg-background/60"
+                  className="border-white/10 bg-[#111827]"
                 />
 
               </div>
@@ -328,7 +341,7 @@ export default function LoginPage() {
                         : "password"
                     }
                     placeholder="Enter your password"
-                    className="bg-background/60 pr-12"
+                    className="border-white/10 bg-[#111827] pr-12"
                   />
 
                   <button
@@ -367,7 +380,7 @@ export default function LoginPage() {
 
                   <Label
                     htmlFor="remember"
-                    className="text-sm font-normal text-muted-foreground"
+                    className="text-sm font-normal text-slate-400"
                   >
 
                     Remember me
@@ -391,16 +404,22 @@ export default function LoginPage() {
 
               <Button
                 onClick={handleLogin}
-                className="w-full rounded-xl"
+                className={`h-12 w-full rounded-xl text-base font-semibold text-white ${
+                  role === "admin"
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-emerald-600 hover:bg-emerald-700"
+                }`}
               >
 
-                {roleConfig.buttonText}
+                {role === "admin"
+                  ? "Login as Admin"
+                  : "Login as Parent"}
 
               </Button>
 
               {/* NOTE */}
 
-              <div className="rounded-2xl border border-border bg-background/40 p-4 text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-white/10 bg-[#111827] p-4 text-sm text-slate-400">
 
                 <p className="font-medium text-white">
                   Demo Note
@@ -408,8 +427,8 @@ export default function LoginPage() {
 
                 <p className="mt-2 leading-6">
 
-                  This currently uses local
-                  role memory for demo route
+                  This demo currently uses
+                  local role memory for route
                   protection. Real authentication
                   can be integrated later.
 

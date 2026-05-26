@@ -1,40 +1,92 @@
-import { Bell, BusFront, ShieldCheck } from "lucide-react";
+import {
+  Bell,
+  BusFront,
+  ShieldCheck,
+  Activity,
+} from "lucide-react";
 
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
-import { Badge } from "@/components/ui/badge";
 
 export default function Topbar() {
   return (
-    <header className="border-b border-border bg-background/80 px-4 py-5 backdrop-blur-xl sm:px-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#020817]/80 backdrop-blur-2xl">
+      <div className="flex items-center justify-between px-4 py-5 sm:px-6">
+
+        {/* LEFT SECTION */}
+
+        <div className="flex items-center gap-4">
+
           <MobileSidebar />
 
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Smart Bus Monitoring Dashboard
+
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              Smart Bus Monitoring
             </h1>
-            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-              Real-time tracking, RFID logs, alerts, and device health
+
+            <p className="mt-1 text-sm text-slate-400">
+              Real-time tracking and student safety
             </p>
+
           </div>
+
         </div>
 
-        <div className="hidden flex-wrap items-center gap-3 md:flex">
-          <Badge className="border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-emerald-400 hover:bg-emerald-500/10">
-            <ShieldCheck className="mr-2 h-4 w-4" />
-            System Online
-          </Badge>
+        {/* RIGHT SECTION */}
 
-          <Badge className="border-blue-500/20 bg-blue-500/10 px-4 py-2 text-blue-400 hover:bg-blue-500/10">
-            <BusFront className="mr-2 h-4 w-4" />
-            Bus ID: BUS-01
-          </Badge>
+        <div className="hidden items-center gap-3 md:flex">
 
-          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-slate-300">
-            <Bell className="h-4 w-4" />
+          {/* SYSTEM STATUS */}
+
+          <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2">
+
+            <div className="relative flex h-3 w-3">
+
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" />
+
+            </div>
+
+            <div>
+
+              <p className="text-[11px] text-slate-400">
+                Bus Monitoring
+              </p>
+
+              <p className="flex items-center gap-1 text-sm font-semibold text-emerald-400">
+                <ShieldCheck className="h-4 w-4" />
+                Monitoring Active
+              </p>
+
+            </div>
+
           </div>
+
+        
+
+          {/* LIVE STATUS */}
+
+          <div className="flex items-center gap-2 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3">
+
+            <Activity className="h-4 w-4 text-cyan-400" />
+
+            <span className="text-sm font-medium text-cyan-400">
+              Live Tracking
+            </span>
+
+          </div>
+
+          {/* NOTIFICATION BUTTON */}
+
+          <button className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white">
+
+            <Bell className="h-5 w-5" />
+
+          </button>
+
         </div>
+
       </div>
     </header>
   );
