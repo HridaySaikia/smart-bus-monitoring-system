@@ -43,8 +43,35 @@ export async function GET() {
       );
     }
 
-    const positions =
+    const rawPositions =
       await response.json();
+
+    // KEEP ONLY LATEST POSITION FOR EACH DEVICE
+    const latestPositionsMap = new Map();
+
+    rawPositions.forEach((position: any) => {
+
+      const existing =
+        latestPositionsMap.get(
+          position.deviceId
+        );
+
+      if (
+        !existing ||
+        new Date(position.fixTime) >
+          new Date(existing.fixTime)
+      ) {
+
+        latestPositionsMap.set(
+          position.deviceId,
+          position
+        );
+      }
+    });
+
+    const positions = Array.from(
+      latestPositionsMap.values()
+    );
 
     // DATABASE
     const client =
@@ -61,65 +88,65 @@ export async function GET() {
         .toArray();
 
     // MERGE DATA
-    const buses =
-      positions.map((item: any) => {
+    const buses = positions
+  .map((item: any) => {
 
-        const matchedBus =
-          dbBuses.find(
-            (bus: any) =>
-              Number(bus.deviceId) ===
-              Number(item.deviceId)
-          );
+    const matchedBus =
+      dbBuses.find(
+        (bus: any) =>
+          Number(bus.deviceId) ===
+          Number(item.deviceId)
+      );
 
-        return {
+    // REMOVE UNKNOWN BUSES
+    if (!matchedBus) {
+      return null;
+    }
 
-          id: item.id,
+    return {
+      id: item.id,
 
-          deviceId:
-            item.deviceId,
+      deviceId:
+        item.deviceId,
 
-          busId:
-            matchedBus?.busId ||
-            "",
+      busId:
+        matchedBus.busId,
 
-          busName:
-            matchedBus?.busName ||
-            "Unknown Bus",
+      busName:
+        matchedBus.busName,
 
-          driverName:
-            matchedBus?.driverName ||
-            "Not Assigned",
+      driverName:
+        matchedBus.driverName,
 
-          conductorName:
-            matchedBus?.conductorName ||
-            "Not Assigned",
+      conductorName:
+        matchedBus.conductorName,
 
-          routeName:
-            matchedBus?.routeName ||
-            "",
+      routeName:
+        matchedBus.routeName,
 
-          latitude:
-            item.latitude,
+      latitude:
+        item.latitude,
 
-          longitude:
-            item.longitude,
+      longitude:
+        item.longitude,
 
-          speed:
-            item.speed || 0,
+      speed:
+        item.speed || 0,
 
-          status:
-            item.attributes?.motion
-              ? "Moving"
-              : "Stopped",
+      status:
+        item.attributes?.motion
+          ? "Moving"
+          : "Stopped",
 
-          battery:
-            item.attributes?.batteryLevel ||
-            0,
+      battery:
+        item.attributes?.batteryLevel || 0,
 
-          fixTime:
-            item.fixTime,
-        };
-      });
+      fixTime:
+        item.fixTime,
+    };
+  })
+
+  .filter(Boolean);
 
     return NextResponse.json({
       success: true,
